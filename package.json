@@ -9,9 +9,13 @@
     "test": "vitest run",
     "format": "biome format",
     "lint": "biome lint",
-    "check": "biome check"
+    "check": "biome check",
+    "codegen": "npm-run-all --parallel codegen:*",
+    "codegen:discovery": "dotenvx run --env-file .env -- graphql-codegen --config ./codegen/discovery.ts",
+    "codegen:cart": "dotenvx run --env-file .env -- graphql-codegen --config ./codegen/cart.ts"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.51.1",
     "@modelcontextprotocol/sdk": "^1.17.0",
     "@t3-oss/env-core": "^0.13.8",
     "@tailwindcss/vite": "^4.0.6",
@@ -25,6 +29,7 @@
     "@tanstack/router-plugin": "^1.132.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "graphql": "^16.12.0",
     "lucide-react": "^0.544.0",
     "nitro": "latest",
     "react": "^19.2.0",
@@ -37,6 +42,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@graphql-codegen/cli": "^6.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@parcel/watcher": "^2.5.1",
     "@tanstack/devtools-vite": "^0.3.11",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
@@ -46,6 +54,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "babel-plugin-react-compiler": "^1.0.0",
     "jsdom": "^27.0.0",
+    "npm-run-all": "^4.1.5",
     "typescript": "^5.7.2",
     "vite": "^7.1.7",
     "vitest": "^3.0.5",
