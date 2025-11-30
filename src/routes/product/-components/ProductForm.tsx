@@ -1,5 +1,7 @@
 import type { FormEvent } from "react";
 import z from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import type { ProductFragment } from "@/gql/discovery/graphql";
 import { addToCartServerFn } from "@/lib/cart/addToCart";
 import { getVariantsWithSkuAndName } from "@/utils/variant";
@@ -22,10 +24,20 @@ export default function ProductForm({ product }: { product: ProductFragment }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
       <input type="hidden" name="sku" value={variants?.[0]?.sku ?? ""} />
-      <input type="number" name="quantity" defaultValue={1} />
-      <button type="submit">Add to cart</button>
+      <div className="flex gap-2">
+        <Input
+          className="w-auto max-w-16 px-2 text-center"
+          type="number"
+          name="quantity"
+          min={1}
+          defaultValue={1}
+        />
+        <Button type="submit" className="grow">
+          Add to cart
+        </Button>
+      </div>
     </form>
   );
 }
