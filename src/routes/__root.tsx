@@ -6,7 +6,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import Header from "../components/Header";
+import SiteHeader from "@/components/SiteHeader/SiteHeader";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles/globals.css?url";
 
@@ -45,7 +45,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="flex min-h-screen flex-col antialiased">
-        <Header />
+        <SiteHeader />
         <main className="grow">{children}</main>
         <TanStackDevtools
           config={{

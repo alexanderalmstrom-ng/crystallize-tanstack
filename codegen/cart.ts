@@ -1,6 +1,7 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
+  overwrite: true,
   schema: [
     {
       cart: {
@@ -19,9 +20,12 @@ const config: CodegenConfig = {
       presetConfig: {
         fragmentMasking: { unmaskFunctionName: "getFragmentData" },
       },
+      plugins: ['typescript'],
       config: {
         documentMode: "string",
         useTypeImports: true,
+        maybeValue: 'T | null | undefined',
+        ignoreEnumValuesFromSchema: true,
       },
     },
   },

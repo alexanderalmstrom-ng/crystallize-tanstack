@@ -2,6 +2,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 import codegenConfig from "./codegen.config.mts";
 
 const config: CodegenConfig = {
+  overwrite: true,
   schema: `https://api.crystallize.com/${codegenConfig.tenantId}/discovery`,
   documents: [
     "src/lib/discovery/**/*.{ts,tsx}",
@@ -14,9 +15,12 @@ const config: CodegenConfig = {
       presetConfig: {
         fragmentMasking: { unmaskFunctionName: "getFragmentData" },
       },
+      plugins: ['typescript'],
       config: {
         documentMode: "string",
         useTypeImports: true,
+        maybeValue: 'T | null | undefined',
+        ignoreEnumValuesFromSchema: true,
       },
     },
   },
