@@ -1,7 +1,8 @@
-import { createMiddleware } from "@tanstack/react-start";
+import { createServerFn } from "@tanstack/react-start";
+import { getCookie, setCookie } from "@tanstack/react-start/server";
 import z from "zod";
 import { env } from "@/env";
-import { AUTH_TOKEN_EXPIRATION_TIME } from "@/utils/auth";
+import { AUTH_TOKEN_EXPIRATION_TIME, decrypt, encrypt } from "@/utils/auth";
 import { getBaseURL } from "@/utils/common";
 
 const AuthTokenResponseSchema = z
@@ -53,9 +54,35 @@ export async function fetchAuthToken() {
   return authTokenValidation.data.token;
 }
 
-export const authTokenMiddleware = createMiddleware({
-  type: "function",
-}).server(async ({ next }) => {
+export const getAuthTokenServerFn = createServerFn({
+  method: "GET",
+}).handler(async () => {
+  const coookieToken = z.string().min(1).safeParse(getCookie("token"));
+
+  if (!coookieToken.success) {
+    const response = await refreshAuthTokenServerFn();
+
+    return {
+      token: response.token,
+    };
+  }
+
+  try {
+    await decrypt(coookieToken.data);
+
+    return {
+      token: coookieToken.data,
+    };
+  } catch {
+    return await refreshAuthTokenServerFn();
+  }
+});
+
+export const refreshAuthTokenServerFn = createServerFn({
+  method: "GET",
+}).handler(async () => {
+  console.log("Refreshing auth token...");
+
   const response = await fetch(`${getBaseURL()}/api/auth-token`, {
     method: "POST",
     body: JSON.stringify({
@@ -71,9 +98,18 @@ export const authTokenMiddleware = createMiddleware({
     .object({ token: z.string() })
     .parse(await response.json());
 
-  return next({
-    context: {
-      token: authTokenResponse.token,
-    },
+  const encryptedToken = await encrypt({
+    token: authTokenResponse.token,
   });
+
+  setCookie("token", encryptedToken, {
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    httpOnly: true,
+    maxAge: AUTH_TOKEN_EXPIRATION_TIME,
+  });
+
+  return {
+    token: encryptedToken,
+  };
 });
