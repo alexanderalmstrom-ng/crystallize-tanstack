@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
 import z from "zod";
 import { env } from "@/env";
-import { decrypt, encrypt } from "@/utils/auth";
+import { AUTH_TOKEN_EXPIRATION_TIME, decrypt, encrypt } from "@/utils/auth";
 import { getBaseURL } from "@/utils/common";
 
 const AddToCartInputSchema = z.object({
@@ -47,7 +47,7 @@ export const addToCartServerFn = createServerFn({ method: "POST" })
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         httpOnly: true,
-        maxAge: 2592000, // 30 days
+        maxAge: AUTH_TOKEN_EXPIRATION_TIME,
       });
 
       console.log("encryptedToken", encryptedToken);

@@ -1,6 +1,7 @@
 import { createMiddleware } from "@tanstack/react-start";
 import z from "zod";
 import { env } from "@/env";
+import { AUTH_TOKEN_EXPIRATION_TIME } from "@/utils/auth";
 import { getBaseURL } from "@/utils/common";
 
 const AuthTokenResponseSchema = z
@@ -28,7 +29,7 @@ export async function fetchAuthToken() {
       },
       body: JSON.stringify({
         scopes: ["cart", "cart:admin"],
-        expiresIn: 2592000, // 30 days
+        expiresIn: AUTH_TOKEN_EXPIRATION_TIME,
       }),
     },
   );
