@@ -1,5 +1,7 @@
+import { createMiddleware } from "@tanstack/react-start";
 import z from "zod";
 import { env } from "@/env";
+import { getBaseURL } from "@/utils/common";
 
 const AuthTokenResponseSchema = z
   .object({
@@ -49,3 +51,28 @@ export async function fetchAuthToken() {
 
   return authTokenValidation.data.token;
 }
+
+export const authTokenMiddleware = createMiddleware({
+  type: "function",
+}).server(async ({ next }) => {
+  const response = await fetch(`${getBaseURL()}/api/auth-token`, {
+    method: "POST",
+    body: JSON.stringify({
+      secret: env.AUTH_TOKEN_API_SECRET,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch auth token");
+  }
+
+  const authToken = await z
+    .object({ token: z.string() })
+    .parse(await response.json());
+
+  return next({
+    context: {
+      token: authToken,
+    },
+  });
+});

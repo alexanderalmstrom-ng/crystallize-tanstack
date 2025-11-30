@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductSplatRouteImport } from './routes/product/$'
+import { Route as ApiAuthTokenRouteImport } from './routes/api/auth-token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,30 +23,39 @@ const ProductSplatRoute = ProductSplatRouteImport.update({
   path: '/product/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthTokenRoute = ApiAuthTokenRouteImport.update({
+  id: '/api/auth-token',
+  path: '/api/auth-token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/auth-token': typeof ApiAuthTokenRoute
   '/product/$': typeof ProductSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/auth-token': typeof ApiAuthTokenRoute
   '/product/$': typeof ProductSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/auth-token': typeof ApiAuthTokenRoute
   '/product/$': typeof ProductSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/product/$'
+  fullPaths: '/' | '/api/auth-token' | '/product/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/product/$'
-  id: '__root__' | '/' | '/product/$'
+  to: '/' | '/api/auth-token' | '/product/$'
+  id: '__root__' | '/' | '/api/auth-token' | '/product/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiAuthTokenRoute: typeof ApiAuthTokenRoute
   ProductSplatRoute: typeof ProductSplatRoute
 }
 
@@ -65,11 +75,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/auth-token': {
+      id: '/api/auth-token'
+      path: '/api/auth-token'
+      fullPath: '/api/auth-token'
+      preLoaderRoute: typeof ApiAuthTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiAuthTokenRoute: ApiAuthTokenRoute,
   ProductSplatRoute: ProductSplatRoute,
 }
 export const routeTree = rootRouteImport

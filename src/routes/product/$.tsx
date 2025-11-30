@@ -4,6 +4,7 @@ import { Heading } from "@/components/ui/heading";
 import type { ProductFragment } from "@/gql/discovery/graphql";
 import { getProductByPathServerFn } from "@/lib/discovery/product";
 import { getVariantsWithSkuAndName } from "@/utils/variant";
+import ProductForm from "./-components/ProductForm";
 import ProductGalleryCarousel from "./-components/ProductGalleryCarousel";
 
 export const Route = createFileRoute("/product/$")({
@@ -48,6 +49,7 @@ function ProductDetails({ product }: { product: ProductFragment }) {
         </Heading>
         <Price amount={product.defaultVariant?.defaultPrice} />
       </header>
+      <ProductForm product={product} />
     </div>
   );
 }
