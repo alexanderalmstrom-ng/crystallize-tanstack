@@ -3,16 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev --port 3000",
-    "build": "vite build",
-    "serve": "vite preview",
-    "test": "vitest run",
+    "dotenvx": "dotenvx",
+    "dev": "dotenvx run -- vite dev --port 3000",
+    "build": "dotenvx run -- pnpm codegen && vite build",
+    "serve": "dotenvx run -- vite preview",
+    "test": "dotenvx run -- vitest run",
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check",
-    "codegen": "npm-run-all --parallel codegen:*",
-    "codegen:discovery": "dotenvx run --env-file .env -- graphql-codegen --config ./codegen/discovery.ts --debug",
-    "codegen:cart": "dotenvx run --env-file .env -- graphql-codegen --config ./codegen/cart.ts --debug"
+    "codegen": "dotenvx run -- npm-run-all --parallel codegen:*",
+    "codegen:discovery": "graphql-codegen --config ./codegen/discovery.ts --debug",
+    "codegen:cart": "graphql-codegen --config ./codegen/cart.ts --debug"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.1",
