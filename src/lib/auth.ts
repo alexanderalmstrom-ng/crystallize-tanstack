@@ -59,6 +59,7 @@ export const getAuthTokenServerFn = createServerFn({
 }).handler(async () => {
   const coookieToken = z.string().min(1).safeParse(getCookie("token"));
 
+  // If the cookie does not exist as a cookie, create a new token and set it in a new cookie
   if (!coookieToken.success) {
     const response = await refreshAuthTokenServerFn();
 
@@ -67,6 +68,7 @@ export const getAuthTokenServerFn = createServerFn({
     };
   }
 
+  // Check if the token is valid and has not expired, if not, refresh the token
   try {
     await decrypt(coookieToken.data);
 
@@ -74,15 +76,17 @@ export const getAuthTokenServerFn = createServerFn({
       token: coookieToken.data,
     };
   } catch {
-    return await refreshAuthTokenServerFn();
+    const refreshTokenResponse = await refreshAuthTokenServerFn();
+
+    return {
+      token: refreshTokenResponse.token,
+    };
   }
 });
 
 export const refreshAuthTokenServerFn = createServerFn({
   method: "GET",
 }).handler(async () => {
-  console.log("Refreshing auth token...");
-
   const response = await fetch(`${getBaseURL()}/api/auth-token`, {
     method: "POST",
     body: JSON.stringify({

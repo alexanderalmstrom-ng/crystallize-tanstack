@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import z from "zod";
-import { refreshAuthTokenServerFn } from "../auth";
+import { getAuthTokenServerFn } from "../auth";
 
 const AddToCartInputSchema = z.object({
   items: z.array(
@@ -16,7 +16,7 @@ export const addToCartServerFn = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     console.log("data", data);
 
-    const authToken = await refreshAuthTokenServerFn();
+    const authToken = await getAuthTokenServerFn();
 
     return {
       authToken: authToken.token,
