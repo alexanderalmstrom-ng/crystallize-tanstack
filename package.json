@@ -6,7 +6,7 @@
     "dotenvx": "dotenvx",
     "dev": "dotenvx run -- vite dev --port 3000",
     "build": "dotenvx run -- pnpm codegen && vite build",
-    "serve": "dotenvx run -- vite preview",
+    "start": "dotenvx run -- vite preview",
     "test": "dotenvx run -- vitest run",
     "format": "biome format",
     "lint": "biome lint",
