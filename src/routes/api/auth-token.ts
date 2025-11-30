@@ -1,5 +1,3 @@
-// routes/hello.ts
-
 import { createFileRoute } from "@tanstack/react-router";
 import { env } from "@/env";
 import { fetchAuthToken } from "@/lib/auth";

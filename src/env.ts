@@ -6,6 +6,7 @@ export const env = createEnv({
     CRYSTALLIZE_TENANT_IDENTIFIER: z.string(),
     CRYSTALLIZE_ACCESS_TOKEN_ID: z.string(),
     CRYSTALLIZE_ACCESS_TOKEN_SECRET: z.string(),
+    SESSION_SECRET: z.string(),
     AUTH_TOKEN_API_SECRET: z.string(),
   },
 

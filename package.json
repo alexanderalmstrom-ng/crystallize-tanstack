@@ -39,6 +39,7 @@
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
     "graphql": "^16.12.0",
+    "jose": "^6.1.2",
     "lucide-react": "^0.544.0",
     "nitro": "latest",
     "react": "^19.2.0",

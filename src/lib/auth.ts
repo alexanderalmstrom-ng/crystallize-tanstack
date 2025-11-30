@@ -66,13 +66,13 @@ export const authTokenMiddleware = createMiddleware({
     throw new Error("Failed to fetch auth token");
   }
 
-  const authToken = await z
+  const authTokenResponse = await z
     .object({ token: z.string() })
     .parse(await response.json());
 
   return next({
     context: {
-      token: authToken,
+      token: authTokenResponse.token,
     },
   });
 });

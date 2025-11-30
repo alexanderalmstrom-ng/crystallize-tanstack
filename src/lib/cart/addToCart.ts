@@ -1,6 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getCookie, setCookie } from "@tanstack/react-start/server";
 import z from "zod";
-import { authTokenMiddleware } from "../auth";
+import { env } from "@/env";
+import { decrypt, encrypt } from "@/utils/auth";
+import { getBaseURL } from "@/utils/common";
 
 const AddToCartInputSchema = z.object({
   items: z.array(
@@ -12,13 +15,46 @@ const AddToCartInputSchema = z.object({
 });
 
 export const addToCartServerFn = createServerFn({ method: "POST" })
-  .middleware([authTokenMiddleware])
   .inputValidator(AddToCartInputSchema)
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
     console.log("data", data);
 
-    return {
-      data,
-      context,
-    };
+    const coookieToken = z.string().min(1).safeParse(getCookie("token"));
+
+    if (!coookieToken.success) {
+      const response = await fetch(`${getBaseURL()}/api/auth-token`, {
+        method: "POST",
+        body: JSON.stringify({
+          secret: env.AUTH_TOKEN_API_SECRET,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch auth token");
+      }
+
+      const authTokenResponse = await z
+        .object({ token: z.string() })
+        .parse(await response.json());
+
+      console.log("authTokenResponse", authTokenResponse);
+
+      const encryptedToken = await encrypt({
+        token: authTokenResponse.token,
+      });
+
+      setCookie("token", encryptedToken, {
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        httpOnly: true,
+        maxAge: 2592000, // 30 days
+      });
+
+      console.log("encryptedToken", encryptedToken);
+      return;
+    }
+
+    const decryptedToken = await decrypt(coookieToken.data);
+
+    console.log("decryptedToken", decryptedToken);
   });
