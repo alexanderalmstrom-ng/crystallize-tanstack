@@ -6,6 +6,10 @@ import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 
+const ReactCompilerConfig = {
+  compilationMode: "annotation", // Only compile "use memo" functions
+};
+
 const config = defineConfig({
   plugins: [
     devtools(),
@@ -17,10 +21,9 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart(),
     viteReact({
-      // @todo Enable react compiler when the graphql duplicate indentifiers error is resolved
-      // babel: {
-      //   plugins: ["babel-plugin-react-compiler"],
-      // },
+      babel: {
+        plugins: [["babel-plugin-react-compiler", ReactCompilerConfig]],
+      },
     }),
   ],
 });
