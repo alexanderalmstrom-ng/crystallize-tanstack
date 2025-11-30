@@ -13,8 +13,6 @@ export const Route = createFileRoute("/product/$")({
       data: { path: params._splat },
     });
 
-    console.log("product", product);
-
     if (!product) {
       throw notFound();
     }
